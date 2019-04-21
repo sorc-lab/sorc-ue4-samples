@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+//#include "Tanks.h"
 #include "Tank.h"
 
 // Sets default values
@@ -9,6 +9,18 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	if (!RootComponent)
+	{
+		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("TankBase"));
+	}
+
+	TankDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("TankDirection"));
+	TankDirection->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+
+	// Sprite/phyisical representation of tank is attached to the arrow/direction tool
+	TankSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("TankSprite"));
+	//TankSprite->AttachTo(TankDirection);
+	TankSprite->AttachToComponent(TankDirection, FAttachmentTransformRules::KeepWorldTransform);
 }
 
 // Called when the game starts or when spawned

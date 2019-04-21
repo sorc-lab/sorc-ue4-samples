@@ -2,9 +2,23 @@
 
 #pragma once
 
+// Go to Project -> your project name's Properties -> NMake -> IncludePath (click Edit) and it will open paths. drag
+// to the end, at empty space, put those included path.
+
+// Project->UE4 Properties->NMake
+
+// Make sure you've added the Paper2D module to your build.cs file under private dependency modules. Then right click
+// your .uproject file in the file explorer and select generate project files. This will update your include
+// directories to include the files under the Paper2D module.
+
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Components/ArrowComponent.h"
+#include "PaperSpriteComponent.h"
 #include "Tank.generated.h"
+
+class UArrowComponent;
+class UPaperSpriteComponent;
 
 UCLASS()
 class TANKS_API ATank : public APawn
@@ -26,4 +40,14 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	// NOTE: UPROPERTY(s) are garbage collected by the engine
+
+	// Helpful debug tool - which was is the tank facing?
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UArrowComponent* TankDirection;
+
+	// Sprite for the tank body
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UPaperSpriteComponent* TankSprite;
 };
