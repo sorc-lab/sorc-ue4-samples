@@ -2,12 +2,11 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+//#include "CoreMinimal.h"
+#include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
+#include "tank.h"
 #include "Turret.generated.h"
-
-class UArrowComponent;
-class UPaperSpriteComponent;
 
 UCLASS()
 class TANKS_API ATurret : public AActor
@@ -33,5 +32,5 @@ private:
 
 	// Sprite for the turret body
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
-	UPaperSpriteComponent* TurretSprite;
+	class UPaperSpriteComponent* TurretSprite;
 };

@@ -14,13 +14,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/ArrowComponent.h"
-#include "PaperSpriteComponent.h"
+//#include "PaperSpriteComponent.h"
 #include "Tank.generated.h"
 
-class UArrowComponent;
-class UPaperSpriteComponent;
+//class UPaperSpriteComponent;
 
-UCLASS()
+UCLASS(abstract)
 class TANKS_API ATank : public APawn
 {
 	GENERATED_BODY()
@@ -49,5 +48,5 @@ private:
 
 	// Sprite for the tank body
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
-	UPaperSpriteComponent* TankSprite;
+	class UPaperSpriteComponent* TankSprite;
 };

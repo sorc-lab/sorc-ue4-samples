@@ -2,6 +2,7 @@
 
 //#include "Tanks.h"
 #include "Tank.h"
+#include "PaperSpriteComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -15,12 +16,11 @@ ATank::ATank()
 	}
 
 	TankDirection = CreateDefaultSubobject<UArrowComponent>(TEXT("TankDirection"));
-	TankDirection->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	TankDirection->SetupAttachment(RootComponent);
 
 	// Sprite/phyisical representation of tank is attached to the arrow/direction tool
 	TankSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("TankSprite"));
-	//TankSprite->AttachTo(TankDirection);
-	TankSprite->AttachToComponent(TankDirection, FAttachmentTransformRules::KeepWorldTransform);
+	TankSprite->SetupAttachment(TankDirection);
 }
 
 // Called when the game starts or when spawned
