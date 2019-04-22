@@ -5,6 +5,24 @@
 #include "GameFramework/SpringArmComponent.h" // Didn't see this in tutorial or the 4.18 migrated code
 #include "PaperSpriteComponent.h"
 
+void FTankInput::Sanitize()
+{
+	MovementInput = RawMovementInput.ClampAxes(-1.0f, 1.0f);
+	MovementInput.GetSafeNormal();
+	RawMovementInput.Set(0.0f, 0.0f);
+}
+
+void FTankInput::MoveX(float AxisValue)
+{
+	RawMovementInput.X += AxisValue;
+}
+
+void FTankInput::MoveY(float AxisValue)
+{
+	RawMovementInput.Y += AxisValue;
+}
+
+
 // Sets default values
 ATank::ATank()
 {
@@ -44,6 +62,20 @@ ATank::ATank()
 	CameraComponent->AspectRatio = 4.0f / 3.0f;
 	CameraComponent->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	CameraComponent->SetWorldRotation(FRotator(-90.0f, -90.0f, 0.0f));
+
+	/*MoveSpeed = 100.0f;
+	MoveAccel = 200.0f;
+	YawSpeed = 180.0f;*/
+}
+
+void ATank::MoveX(float AxisValue)
+{
+	TankInput.MoveX(AxisValue);
+}
+
+void ATank::MoveY(float AxisValue)
+{
+	TankInput.MoveY(AxisValue);
 }
 
 // Called when the game starts or when spawned
@@ -58,12 +90,16 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	TankInput.Sanitize();
+	UE_LOG(LogTemp, Warning, TEXT("Movement: (%f %f)"), TankInput.MovementInput.X, TankInput.MovementInput.Y);
 }
 
 // Called to bind functionality to input
-void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ATank::SetupPlayerInputComponent(class UInputComponent* InputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(InputComponent);
 
+	InputComponent->BindAxis("MoveX", this, &ATank::MoveX);
+	InputComponent->BindAxis("MoveY", this, &ATank::MoveY);
 }
 

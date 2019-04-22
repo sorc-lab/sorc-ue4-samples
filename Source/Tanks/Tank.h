@@ -2,22 +2,30 @@
 
 #pragma once
 
-// Go to Project -> your project name's Properties -> NMake -> IncludePath (click Edit) and it will open paths. drag
-// to the end, at empty space, put those included path.
-
-// Project->UE4 Properties->NMake
-
-// Make sure you've added the Paper2D module to your build.cs file under private dependency modules. Then right click
-// your .uproject file in the file explorer and select generate project files. This will update your include
-// directories to include the files under the Paper2D module.
-
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/ArrowComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Tank.generated.h"
 
-//class UPaperSpriteComponent;
+USTRUCT(BlueprintType)
+struct FTankInput
+{
+	GENERATED_BODY()
+
+public:
+	// Sanitized movement input, usable for game logic.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input")
+	FVector2D MovementInput;
+
+	void Sanitize();
+	void MoveX(float AxisValue);
+	void MoveY(float AxisValue);
+
+private:
+	//~ Code only. Blueprints should not need to know about this. This should not be used for game logic.
+	FVector2D RawMovementInput;
+};
 
 UCLASS(abstract)
 class TANKS_API ATank : public APawn
@@ -37,7 +45,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+
+	FORCEINLINE const FTankInput& GetCurrentInput() const { return TankInput; }
+
+private:
+	void MoveX(float AxisValue);
+	void MoveY(float AxisValue);
 
 private:
 	// NOTE: UPROPERTY(s) are garbage collected by the engine
@@ -57,4 +71,8 @@ private:
 	// In-game camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* CameraComponent;
+
+	// Current input for our tank. Sanitized in Tick().
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input", meta = (AllowPrivateAccess = "true"))
+	FTankInput TankInput;
 };
