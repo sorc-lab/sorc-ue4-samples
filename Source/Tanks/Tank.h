@@ -49,4 +49,8 @@ private:
 	// Sprite for the tank body
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	class UPaperSpriteComponent* TankSprite;
+
+	// The actor used as the turret: This spawns the actor and manages it automatically on spawn/de-spawn etc.
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UChildActorComponent* ChildTurret;
 };

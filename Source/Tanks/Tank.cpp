@@ -21,6 +21,9 @@ ATank::ATank()
 	// Sprite/phyisical representation of tank is attached to the arrow/direction tool
 	TankSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("TankSprite"));
 	TankSprite->SetupAttachment(TankDirection);
+
+	ChildTurret = CreateDefaultSubobject<UChildActorComponent>(TEXT("Turret"));
+	ChildTurret->SetupAttachment(TankDirection);
 }
 
 // Called when the game starts or when spawned
