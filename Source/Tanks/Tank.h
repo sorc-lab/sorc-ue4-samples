@@ -14,7 +14,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Components/ArrowComponent.h"
-//#include "PaperSpriteComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Tank.generated.h"
 
 //class UPaperSpriteComponent;
@@ -53,4 +53,8 @@ private:
 	// The actor used as the turret: This spawns the actor and manages it automatically on spawn/de-spawn etc.
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	UChildActorComponent* ChildTurret;
+
+	// In-game camera
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* CameraComponent;
 };
