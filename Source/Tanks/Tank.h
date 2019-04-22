@@ -43,7 +43,7 @@ public:
 private:
 	// NOTE: UPROPERTY(s) are garbage collected by the engine
 
-	// Helpful debug tool - which was is the tank facing?
+	// Helpful debug tool - which way is the tank facing?
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Tank", meta = (AllowPrivateAccess = "true"))
 	UArrowComponent* TankDirection;
 
