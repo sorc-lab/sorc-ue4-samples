@@ -63,9 +63,9 @@ ATank::ATank()
 	CameraComponent->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	CameraComponent->SetWorldRotation(FRotator(-90.0f, -90.0f, 0.0f));
 
-	/*MoveSpeed = 100.0f;
+	MoveSpeed = 100.0f;
 	MoveAccel = 200.0f;
-	YawSpeed = 180.0f;*/
+	YawSpeed = 180.0f;
 }
 
 void ATank::MoveX(float AxisValue)
@@ -86,12 +86,69 @@ void ATank::BeginPlay()
 }
 
 // Called every frame
-void ATank::Tick(float DeltaTime)
+void ATank::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaTime);
-
+	Super::Tick(DeltaSeconds);
 	TankInput.Sanitize();
-	UE_LOG(LogTemp, Warning, TEXT("Movement: (%f %f)"), TankInput.MovementInput.X, TankInput.MovementInput.Y);
+
+	// Respond to controls.
+	{
+		FVector DesiredMovementDirection = FVector(TankInput.MovementInput.X, TankInput.MovementInput.Y, 0.0f);
+		if (!DesiredMovementDirection.IsNearlyZero())
+		{
+			// Rotate the tank. This process deals with TankDirection directly, not the actor/RootComponent, because we don't want to affect the camera.
+			FRotator MovementAngle = DesiredMovementDirection.Rotation();
+			float DeltaYaw = UTankStatics::FindDeltaAngleDegrees(TankDirection->GetComponentRotation().Yaw, MovementAngle.Yaw);
+			bool bReverse = false;
+			if (DeltaYaw != 0.0f)
+			{
+				float AdjustedDeltaYaw = DeltaYaw;
+				// If we're trying to go more than 90 degrees away from our current facing, reverse.
+				if (AdjustedDeltaYaw < -90.0f)
+				{
+					bReverse = true;
+					AdjustedDeltaYaw += 180.0f;
+				}
+				else if (AdjustedDeltaYaw > 90.0f)
+				{
+					bReverse = true;
+					AdjustedDeltaYaw -= 180.0f;
+				}
+
+				// Adjust toward our desired angle, and stop if we've reached it.
+				float MaxYawThisFrame = YawSpeed * DeltaSeconds;
+				if (MaxYawThisFrame >= FMath::Abs(AdjustedDeltaYaw))
+				{
+					if (bReverse)
+					{
+						// Move backward. Use a temp variable in case we need MovementAngle to be correct later.
+						FRotator FacingAngle = MovementAngle;
+						FacingAngle.Yaw = MovementAngle.Yaw + 180.0f;
+						TankDirection->SetWorldRotation(FacingAngle);
+					}
+					else
+					{
+						// Finish, moving forward. Facing and movement are the same angle.
+						TankDirection->SetWorldRotation(MovementAngle);
+					}
+				}
+				else
+				{
+					// Adjust as far as we can this frame, because we know we can't reach the goal yet.
+					TankDirection->AddLocalRotation(FRotator(0.0f, FMath::Sign(AdjustedDeltaYaw) * MaxYawThisFrame, 0.0f));
+				}
+			}
+
+			// Move the tank.
+			{
+				FVector MovementDirection = TankDirection->GetForwardVector() * (bReverse ? -1.0f : 1.0f);
+				FVector Pos = GetActorLocation();
+				Pos.X += MovementDirection.X * 100.0f * DeltaSeconds;
+				Pos.Y += MovementDirection.Y * 100.0f * DeltaSeconds;
+				SetActorLocation(Pos);
+			}
+		}
+	}
 }
 
 // Called to bind functionality to input

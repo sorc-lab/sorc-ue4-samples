@@ -75,4 +75,17 @@ private:
 	// Current input for our tank. Sanitized in Tick().
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input", meta = (AllowPrivateAccess = "true"))
 	FTankInput TankInput;
+
+protected:
+	// Top speed for our tank. Tank's velocity will be clamped to this magnitude.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (ClampMin = "0.0"))
+	float MoveSpeed;
+
+	// Acceleration for our tank, when player is trying to move or change directions.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (ClampMin = "0.0"))
+	float MoveAccel;
+
+	// Turn speed (in degrees) for our tank. Tank will only turn while moving.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Tank", meta = (ClampMin = "0.0"))
+	float YawSpeed;
 };
