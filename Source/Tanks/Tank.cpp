@@ -2,8 +2,9 @@
 
 #include "Tank.h"
 #include "Tanks.h"
-#include "GameFramework/SpringArmComponent.h" // Didn't see this in tutorial or the 4.18 migrated code
+#include "GameFramework/SpringArmComponent.h"
 #include "PaperSpriteComponent.h"
+#include "Components/InputComponent.h"
 
 void FTankInput::Sanitize()
 {
