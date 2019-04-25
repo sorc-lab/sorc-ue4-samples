@@ -2,10 +2,9 @@
 
 #pragma once
 
-//#include "CoreMinimal.h"
 #include "Components/ArrowComponent.h"
 #include "GameFramework/Actor.h"
-#include "tank.h"
+#include "Tank.h" // I thought this was bad practice?
 #include "Turret.generated.h"
 
 UCLASS()
@@ -33,4 +32,12 @@ private:
 	// Sprite for the turret body
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
 	class UPaperSpriteComponent* TurretSprite;
+
+	// Tank that owns this turret.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
+	ATank* Tank;
+
+	// Maximum rate at which the turret can turn to aim.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
+	float YawSpeed;
 };
