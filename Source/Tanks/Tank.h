@@ -18,9 +18,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input")
 	FVector2D MovementInput;
 
+	// These are 1 bit bools. If you use bool then it will use 4 bits. If you use a lot of these it could inflate your
+	// structure. This is a smaller way to store boolean values in a struct.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input")
+	uint32 bFire1 : 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tank Input")
+	uint32 bFire2 : 1;
+
 	void Sanitize();
+
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
+
+	void Fire1(bool bPressed);
+	void Fire2(bool bPressed);
 
 private:
 	//~ Code only. Blueprints should not need to know about this. This should not be used for game logic.
@@ -52,6 +64,12 @@ public:
 private:
 	void MoveX(float AxisValue);
 	void MoveY(float AxisValue);
+
+	void Fire1Pressed();
+	void Fire1Released();
+
+	void Fire2Pressed();
+	void Fire2Released();
 
 private:
 	// NOTE: UPROPERTY(s) are garbage collected by the engine
