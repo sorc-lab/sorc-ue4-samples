@@ -1,28 +1,36 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Missile.h"
+#include "Tanks.h"
+#include "GameFramework/Actor.h"
+#include "TimerManager.h"
 
-// Sets default values
 AMissile::AMissile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Speed = 200.0f;
+	Radius = 20.0f;
+	DirectDamage = 5;
 }
 
-// Called when the game starts or when spawned
 void AMissile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	//GetWorldTimerManager().SetTimer(ExplodeTimerHandle, this, &AMissile::Explode, 1.0f);
+	GetWorldTimerManager().SetTimer(ExplodeTimerHandle, this, &AMissile::Explode, 1.0f);
 }
 
-// Called every frame
-void AMissile::Tick(float DeltaTime)
-{
+void AMissile::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
 }
 
+void AMissile::Explode()
+{
+	GetWorldTimerManager().ClearTimer(ExplodeTimerHandle);
+	SetActorEnableCollision(false);
+	OnExplode();
+}
+
+void AMissile::OnExplode_Implementation() {
+	Destroy();
+}
