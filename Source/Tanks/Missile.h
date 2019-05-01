@@ -32,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FName MovementCollisionProfile;
 
+private:
+	void FlyMissile(FVector ActorLoc, FVector Target);
+
 protected:
 	void Explode();
 	FTimerHandle ExplodeTimerHandle;
