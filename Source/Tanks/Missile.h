@@ -43,5 +43,6 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, Category = "Projectile")
 	void OnExplode();
 
+	// _Implementation = a blueprint native function that can override the C++ function
 	virtual void OnExplode_Implementation();
 };

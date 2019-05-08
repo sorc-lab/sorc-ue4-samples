@@ -23,12 +23,14 @@ void AMissile::BeginPlay()
 	GetWorldTimerManager().SetTimer(ExplodeTimerHandle, this, &AMissile::Explode, 1.0f);
 }
 
-void AMissile::Tick(float DeltaTime) {
+void AMissile::Tick(float DeltaTime)
+{
 	Super::Tick(DeltaTime);
 
 	FVector ActorLoc = GetActorLocation();
 	FVector Target = ActorLoc + ((DeltaTime * Speed) * GetTransform().GetUnitAxis(EAxis::X));
 
+	// TODO: Fix bug: LogPhysics: Warning: COLLISION PROFILE [Missile:Fly] is not found (on fire)
 	FlyMissile(ActorLoc, Target);
 }
 
@@ -55,7 +57,7 @@ void AMissile::FlyMissile(FVector ActorLoc, FVector Target)
 		{
 			SetActorLocation(OutHit.Location);
 
-			if (IDamageInterface * DamageActor = Cast<IDamageInterface>(OutHit.Actor.Get()))
+			if (IDamageInterface* DamageActor = Cast<IDamageInterface>(OutHit.Actor.Get()))
 				DamageActor->ReceiveDamage(DirectDamage);
 
 			Explode();
@@ -73,5 +75,5 @@ void AMissile::Explode()
 }
 
 void AMissile::OnExplode_Implementation() {
-	Destroy();
+	Destroy(); // Just despawns missile, but can be overridden in blueprints to do more
 }

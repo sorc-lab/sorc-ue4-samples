@@ -13,16 +13,11 @@ class TANKS_API ATurret : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ATurret();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	/** The name of the socket at the muzzle - used for spawning missiles. */
+	static const FName MuzzleSocketName;
 
 private:
 	// Helpful debug tool - which way is the turret facing?
@@ -40,4 +35,19 @@ private:
 	// Maximum rate at which the turret can turn to aim.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
 	float YawSpeed;
+
+	// Time to delay between Fire1 commands.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
+	float Fire1Cooldown;
+
+	// If this value is greater than the current game time, Fire1 is ignored because it has been fired too recently.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turret", meta = (AllowPrivateAccess = "true"))
+	float Fire1ReadyTime;
+
+protected:
+	virtual void BeginPlay() override;
+
+	// Projectile to spawn when firing.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turret")
+	TSubclassOf<AActor> Projectile;
 };

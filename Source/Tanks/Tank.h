@@ -48,6 +48,9 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 
+	/** The name of the socket at the muzzle - used for spawning missiles. */
+	static const FName MuzzleSocketName;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

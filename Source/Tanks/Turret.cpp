@@ -7,6 +7,8 @@
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
+const FName ATurret::MuzzleSocketName(TEXT("Muzzle"));
+
 // Sets default values
 ATurret::ATurret()
 {
@@ -79,6 +81,31 @@ void ATurret::Tick(float DeltaTime)
 					}
 
 					TurretDirection->SetWorldRotation(CurrentRotation);
+				}
+			}
+		}
+
+		// Handle input.
+		const FTankInput& CurrentInput = Tank->GetCurrentInput();
+		if (CurrentInput.bFire1 && Projectile)
+		{
+			if (UWorld* World = GetWorld())
+			{
+				float CurrentTime = World->GetTimeSeconds();
+
+				if (Fire1ReadyTime <= CurrentTime)
+				{
+					FVector Loc = TurretSprite->GetSocketLocation(MuzzleSocketName);
+					FRotator Rot = TurretDirection->GetComponentRotation();
+
+					if (AActor* NewProjectile = World->SpawnActor(Projectile))
+					{
+						NewProjectile->SetActorLocation(Loc);
+						NewProjectile->SetActorRotation(Rot);
+					}
+
+					// Set the cooldown timer.
+					Fire1ReadyTime = CurrentTime + Fire1Cooldown;
 				}
 			}
 		}
